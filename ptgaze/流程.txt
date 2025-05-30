@@ -1,0 +1,21 @@
+1.eye_center -> s0人脸坐标系 = 视线起点 需要s1->s0 R1T1矩阵
+2.p2_s0 = p1_s0 + sight line = 视线终点
+3.p1_s0, p2_s0 转换到s2屏幕坐标系 -> p1_s2, p2_s2
+4.利用p1_s2, p2_s2计算屏幕注视点 函数uv_in_screen 需要s0->s2的RT矩阵
+还要先计算出R1T1 + R2T2 得到 s0->s2的RT矩阵
+
+gaze上，已有的信息：
+1.head_pose和sight_line 都为人脸坐标系转相机坐标系s0->s1 即有R1矩阵，
+已有face_center为s1坐标系下的
+
+2.缺R2 相机到屏幕
+
+3.缺 p1_s0， p2_s0
+p1_s0可通过head_pose和R1逆运算得到eye_center，作为视线起点（已有）
+p2_s0先通过sight_line的pitch，yaw得到vector，在和R1逆运算得到s0下的vector
+
+4.搞清楚rot里的rvec和tvec怎么组合成RT矩阵
+
+新问题：
+不知道 相机 与 真实世界的 像素与物理尺寸的比例
+现在得到的face center为相机归一化坐标
