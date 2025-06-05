@@ -18,7 +18,6 @@ def coord_trans(src_coords, dst_coords, R, T, is_inv=0):
         raise ValueError("旋转矩阵必须是3x3的矩阵")
     if T.shape != (3,):
         raise ValueError("平移向量必须是长度为3的数组")
-
     # print(R, T)
 
     # 执行坐标转换
@@ -38,6 +37,7 @@ def uv_in_screen(p1_s0, p2_s0, p1_s2, p2_s2, u_vis, v_vis, u_world, v_world, R, 
     # print(p2_s2)
     x_screen = p1_s2[0] - (p1_s2[0] - p2_s2[0]) * p1_s2[2] / (p1_s2[2] - p2_s2[2])
     y_screen = p1_s2[1] - (p1_s2[1] - p2_s2[1]) * p1_s2[2] / (p1_s2[2] - p2_s2[2])
+    # print('x y screen:', x_screen, y_screen)
     u = x_screen * u_vis / u_world + u_vis / 2
     v = y_screen * v_vis / v_world + v_vis / 2
 
@@ -147,3 +147,52 @@ class Move_Filter():
         # print(self.acc_u, u)
 
         return ret_u, ret_v
+
+
+import numpy as np
+
+
+def right_handed_euler_to_rotation(yaw, pitch, roll):
+    """
+    将Yaw、Pitch、Roll欧拉角转换为右手坐标系下的旋转矩阵（ZYX顺序）
+    坐标系定义：x轴向左，y轴向下，z轴向前
+
+    参数:
+    - yaw: 偏航角（绕Z轴旋转），弧度制
+    - pitch: 俯仰角（绕Y轴旋转），弧度制
+    - roll: 翻滚角（绕X轴旋转），弧度制
+
+    返回:
+    - R: 3x3旋转矩阵
+    """
+    # 绕X轴旋转（Roll） - x轴向左，y轴向下，z轴向前
+    R_x = np.array([
+        [1, 0, 0],
+        [0, np.cos(roll), -np.sin(roll)],  # 右手系标准旋转（x轴向左）
+        [0, np.sin(roll), np.cos(roll)]
+    ])
+
+    # 绕Y轴旋转（Pitch） - x轴向左，y轴向下，z轴向前
+    R_y = np.array([
+        [np.cos(pitch), 0, np.sin(pitch)],  # 右手系标准旋转（y轴向下）
+        [0, 1, 0],
+        [-np.sin(pitch), 0, np.cos(pitch)]
+    ])
+
+    # 绕Z轴旋转（Yaw） - x轴向左，y轴向下，z轴向前
+    R_z = np.array([
+        [np.cos(yaw), -np.sin(yaw), 0],  # 右手系标准旋转（z轴向前）
+        [np.sin(yaw), np.cos(yaw), 0],
+        [0, 0, 1]
+    ])
+
+    # 组合旋转矩阵（ZYX顺序）
+    R = np.dot(R_z, np.dot(R_y, R_x))
+
+    return R
+
+yaw = np.pi
+pitch = 0
+roll = 0
+R_ = right_handed_euler_to_rotation(yaw, pitch, roll)
+print(R_.reshape(-1).tolist())

@@ -132,7 +132,7 @@ class GazeEstimator:
         image = image.to(device)
         prediction = self._gaze_estimation_model(image)
         prediction = prediction.cpu().numpy()
-        print('pitch, yaw:', prediction[0])
+        # print('pitch, yaw:', prediction[0])
 
         face.normalized_gaze_angles = prediction[0]
         face.angle_to_vector()
@@ -183,7 +183,7 @@ class GazeEstimator:
         # Get continuous predictions in degrees.
         pitch_predicted = torch.sum(pitch_predicted.data * self.idx_tensor, dim=1) * 4 - 180
         yaw_predicted = torch.sum(yaw_predicted.data * self.idx_tensor, dim=1) * 4 - 180
-        print('pitch, yaw:', pitch_predicted, yaw_predicted)
+        # print('pitch, yaw:', pitch_predicted, yaw_predicted)
 
         pitch_predicted = pitch_predicted.cpu().detach().numpy() * np.pi / 180.0
         yaw_predicted = yaw_predicted.cpu().detach().numpy() * np.pi / 180.0

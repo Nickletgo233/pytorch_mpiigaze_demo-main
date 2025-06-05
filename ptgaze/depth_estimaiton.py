@@ -33,8 +33,9 @@ p2_s2 = [0., 0., 0.]
 x_adjust = 0.
 y_adjust = 0.
 vector_adjust = [0., 0., 0.]
-R2 = [0.01982, -0.99974, 0.01064, 0.99771, 0.01909, -0.06479, 0.06457, 0.01190, 0.99784]
-T2 = [0.04763, 30.02763, 0.99784]
+# R2 = [0.01982, -0.99974, 0.01064, 0.99771, 0.01909, -0.06479, 0.06457, 0.01190, 0.99784]
+R2 = [-1.0, -1.2246467991473532e-16, 0.0, 1.2246467991473532e-16, -1.0, 0.0, 0.0, 0.0, 1.0]
+T2 = [-30.04763, 200.02763, 0.]
 w_vis, h_vis = 1920, 1080
 w_world, h_world = det_world_wh(27, 16, 9)
 test_point = [0., 0., 0.]
@@ -49,7 +50,7 @@ while True:
         break
 
     # 水平镜像翻转（参数 1 表示水平翻转）
-    mirrored_frame = cv2.flip(frame, 1)
+    # mirrored_frame = cv2.flip(frame, 1)
     fps_start_time = cv2.getTickCount()
     # print('1')
     try:
@@ -117,7 +118,7 @@ while True:
 
     # 将a,b从cm映射到像素（假设中心为画布中心）
     # 你可以根据实际最大距离调整缩放因子
-    scale = 35  # 每cm对应5个像素（可调）
+    # scale = 35  # 每cm对应5个像素（可调）
     center_x = screen_width // 2
     center_y = screen_height // 2
 
@@ -125,10 +126,13 @@ while True:
     smooth_u = alpha * u + (1 - alpha) * smooth_u
     smooth_v = alpha * v + (1 - alpha) * smooth_v
 
-    point_x = int(smooth_v)
-    point_y = int(smooth_u)
-    point_x = screen_width - 1 - point_x  # X方向不变（向右为正）
+    # point_x = int(smooth_v)
+    # point_y = int(smooth_u)
+    point_x = int(smooth_u)
+    point_y = int(smooth_v)
+    # point_x = screen_width - 1 - point_x  # X方向不变（向右为正）
     point_y = screen_height - 1 - point_y  # Y方向翻转（向上为正）
+    # print(f'x:{point_x}, y:{point_y}')
 
     cv2.line(background, [int(center_x) - 3, int(center_y)], [int(center_x) + 3, int(center_y)], (255, 0, 0), 2)
     cv2.line(background, [int(center_x), int(center_y) + 3], [int(center_x), int(center_y) - 3], (255, 0, 0), 2)
@@ -142,7 +146,7 @@ while True:
     cv2.circle(background, (clamped_x, clamped_y), 15, (0, 0, 255), -1)
     cv2.putText(
         background,
-        f"u: {u:.2f} v:{v:.3f}",
+        f"u: {point_x:.2f} v:{point_y:.3f}",
         (900, 500),
         cv2.FONT_HERSHEY_SIMPLEX,
         0.5, (255, 255, 0), 1, cv2.LINE_AA,
