@@ -126,7 +126,7 @@ class Move_Filter():
     def __init__(self):
         self.acc_u = 0.0
         self.acc_v = 0.0
-        self.thre =  20.0
+        self.thre =  25.0
         self.decay = 0.9
 
     def update(self, u, v):

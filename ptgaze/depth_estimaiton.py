@@ -17,10 +17,9 @@ package_root = pathlib.Path(__file__).parent.resolve()
 print('package_root:', package_root)
 config = OmegaConf.load(package_root / 'depth_estimation_mpiifacegaze.yaml')
 # config = OmegaConf.load(package_root / 'depth_estimation_L2CS.yaml')
-# config = OmegaConf.load(package_root / 'depth_estimation_et h-xgaze.yaml')
+# config = OmegaConf.load(package_root / 'depth_estimation_eth-xgaze.yaml')
 config.PACKAGE_ROOT = package_root.as_posix()  # 转斜杠\为/q
 check_path_all(config)
-# GazeEstimator(config)
 demo = Demo(config)
 temp_p, temp_y = 0, 0
 fps_history = []
@@ -116,9 +115,6 @@ while True:
     # 创建黑色背景
     background = np.zeros((screen_height, screen_width, 3), dtype=np.uint8) # 先高后宽
 
-    # 将a,b从cm映射到像素（假设中心为画布中心）
-    # 你可以根据实际最大距离调整缩放因子
-    # scale = 35  # 每cm对应5个像素（可调）
     center_x = screen_width // 2
     center_y = screen_height // 2
 

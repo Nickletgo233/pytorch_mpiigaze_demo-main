@@ -25,8 +25,6 @@ to train a model with ETH-XGaze dataset.
 
 ## Quick start
 
-This program is tested only on Ubuntu.
-
 ### Installation
 
 ```bash
